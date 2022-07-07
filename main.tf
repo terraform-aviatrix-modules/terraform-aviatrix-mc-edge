@@ -11,9 +11,9 @@ resource "aviatrix_edge_spoke" "default" {
 
   #Optional
   management_egress_ip_prefix            = var.management_egress_ip_prefix
-  enable_management_over_private_network = false
-  enable_edge_active_standby             = false
-  enable_edge_active_standby_preemptive  = false
+  enable_management_over_private_network = var.enable_management_over_private_network
+  enable_edge_active_standby             = var.enable_edge_active_standby
+  enable_edge_active_standby_preemptive  = var.enable_edge_active_standby_preemptive
   management_interface_ip_prefix         = var.management_interface_ip_prefix
   management_default_gateway_ip          = var.management_default_gateway_ip
   dns_server_ip                          = var.dns_server_ip
@@ -28,8 +28,8 @@ resource "aviatrix_edge_spoke" "default" {
   enable_preserve_as_path          = var.enable_preserve_as_path
   bgp_polling_time                 = var.bgp_polling_time
   bgp_hold_time                    = var.bgp_hold_time
-  enable_edge_transitive_routing   = false
-  enable_jumbo_frame               = false
+  enable_edge_transitive_routing   = var.enable_edge_transitive_routing
+  enable_jumbo_frame               = var.enable_jumbo_frame
   latitude                         = var.latitude
   longitude                        = var.longitude
   wan_public_ip                    = var.wan_public_ip
@@ -63,7 +63,7 @@ resource "aviatrix_edge_spoke_transit_attachment" "default" {
 }
 
 resource "aviatrix_edge_spoke_external_device_conn" "default" {
-  for_each = var.attached ? var.bgp_peers : 0
+  for_each = var.attached ? var.bgp_peers : {}
 
   site_id           = aviatrix_edge_spoke.default.site_id
   gw_name           = aviatrix_edge_spoke.default.gw_name

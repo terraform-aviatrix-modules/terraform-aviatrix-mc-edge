@@ -105,8 +105,23 @@ variable "management_egress_ip_prefix" {
   }
 }
 
+variable "enable_management_over_private_network" {
+  description = "Switch to enable management over the private network."
+  type        = bool
+  default     = null
+}
 
+variable "enable_edge_active_standby" {
+  description = "Switch to enable Edge Active-Standby mode."
+  type        = bool
+  default     = null
+}
 
+variable "enable_edge_active_standby_preemptive" {
+  description = "Switch to enable Preemptive Mode for Edge Active-Standby."
+  type        = bool
+  default     = null
+}
 
 variable "management_interface_ip_prefix" {
   description = "Management interface IP and subnet prefix."
@@ -210,6 +225,18 @@ variable "bgp_hold_time" {
     condition     = var.bgp_hold_time != null ? (var.bgp_hold_time >= 12 && var.bgp_hold_time <= 360) : true
     error_message = "Invalid value. Must be in range 12-360."
   }
+}
+
+variable "enable_edge_transitive_routing" {
+  description = "Switch to enable Edge transitive routing."
+  type        = bool
+  default     = null
+}
+
+variable "enable_jumbo_frame" {
+  description = "Switch to enable jumbo frame."
+  type        = bool
+  default     = null
 }
 
 variable "latitude" {
