@@ -146,7 +146,7 @@ variable "management_default_gateway_ip" {
 }
 
 variable "dns_server_ip" {
-  description = "DNS server IP"
+  description = "DNS server IP."
   type        = string
   default     = null
 
@@ -157,7 +157,7 @@ variable "dns_server_ip" {
 }
 
 variable "secondary_dns_server_ip" {
-  description = "Secondary DNS server IP"
+  description = "Secondary DNS server IP."
   type        = string
   default     = null
 
@@ -199,7 +199,7 @@ variable "spoke_bgp_manual_advertise_cidrs" {
 }
 
 variable "enable_preserve_as_path" {
-  description = "Enable preserve as_path when advertising manual summary cidrs on BGP spoke gateway."
+  description = "Enable preserve as_path when advertising manual summary cidrs on BGP edge gateway."
   type        = bool
   default     = null
 }
