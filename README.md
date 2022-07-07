@@ -10,7 +10,7 @@ Deploys an Aviatrix edge gateway and attaches it to the desired transit gateway 
 ### Compatibility
 Module version | Terraform version | Controller version | Terraform provider version
 :--- | :--- | :--- | :---
-v1.0.0 | >= 1.1.0 | 6.8 | ~> 2.23.0
+v1.0.0 | >= 1.2.0 | 6.8 | ~> 2.23.0
 
 ### Usage Example
 ```
@@ -40,7 +40,7 @@ The following variables are optional:
 key | default | value 
 :---|:---|:---
 management_interface_config | "DHCP" | Management interface configuration.
-attached | true | Set to false if you don't want to attach edge to transit_gw.
+attached | false | Set to true to attach it to the transit gateway after provisioning.
 ztp_file_type | "iso" | ZTP file type. Valid values: "iso", "cloud-init".
 ztp_file_download_path | execution folder | The folder path where the ZTP file will be downloaded.
 network_domain | | Provide network domain name to which edge needs to be deployed. Transit gateway must be attached and have segmentation enabled.
@@ -48,6 +48,9 @@ bgp_peers | | Map of BGP peers to set up for this edge gateway.
 local_as_number | | Configures the Aviatrix Edge Gateway ASN number.
 prepend_as_path | | List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set.
 enable_learned_cidrs_approval | false | Switch to enable/disable CIDR approval for BGP Edge Gateway.
+management_egress_ip_prefix | | Management egress gateway IP and subnet prefix.
+
+
 
 ### Outputs
 This module will return the following outputs:
