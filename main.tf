@@ -50,9 +50,10 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 }
 
 resource "aviatrix_edge_spoke_transit_attachment" "default" {
-  count           = var.attached ? 1 : 0
+  for_each = var.attached ? var.transit_gws : []
+
   spoke_gw_name   = aviatrix_edge_spoke.default.gw_name
-  transit_gw_name = var.transit_gw
+  transit_gw_name = each.value
 
   lifecycle {
     precondition {

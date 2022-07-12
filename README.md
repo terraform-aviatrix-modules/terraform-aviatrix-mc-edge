@@ -22,7 +22,7 @@ module "edge1" {
   lan_interface_ip_prefix = "10.50.10.0/24"
   site_id                 = "home"
   #attached                = true
-  transit_gw              = "test"
+  transit_gws             = ["transit1", "transit2"]
   wan_default_gateway_ip  = "1.1.1.1"
   wan_interface_ip_prefix = "1.1.1.0/24"
 }
@@ -37,7 +37,7 @@ key | value
 gw_name | Name for the edge gateway.
 lan_interface_ip_prefix | LAN interface IP and subnet prefix.
 site_id | Site ID for the spoke gateway.
-transit_gw | Name of the transit gateway to attach this edge to. (Required when attached = true)
+transit_gws | A list of names of the transit gateways to attach this edge to. (Required when attached = true)
 wan_default_gateway_ip | WAN default gateway IP.
 wan_interface_ip_prefix | WAN interface IP and subnet prefix.
 
