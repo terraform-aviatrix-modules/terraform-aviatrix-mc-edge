@@ -1,15 +1,162 @@
-variable "gw_name" {
-  description = "Name for the edge gateway."
-  type        = string
+variable "edge_gws" {
+  description = "A map of edge gateways."
+  type = map(object({
+    wan_interface_ip_prefix = string,
+    gw_name                 = string,
+    lan_interface_ip_prefix = string,
+
+    wan_default_gateway_ip                 = string,
+    management_interface_config            = optional(string),
+    management_default_gateway_ip          = optional(string),
+    management_egress_ip_prefix            = optional(string),
+    enable_management_over_private_network = optional(bool),
+    enable_edge_active_standby             = optional(bool),
+    enable_edge_active_standby_preemptive  = optional(bool),
+    management_interface_ip_prefix         = optional(string),
+    dns_server_ip                          = optional(string),
+    secondary_dns_server_ip                = optional(string),
+    local_as_number                        = optional(number),
+    prepend_as_path                        = optional(list(number)),
+    enable_learned_cidrs_approval          = optional(bool),
+    approved_learned_cidrs                 = optional(list(string)),
+    spoke_bgp_manual_advertise_cidrs       = optional(list(string)),
+    enable_preserve_as_path                = optional(bool),
+    bgp_polling_time                       = optional(number),
+    bgp_hold_time                          = optional(number),
+    enable_edge_transitive_routing         = optional(bool),
+    latitude                               = optional(string),
+    longitude                              = optional(string),
+    wan_public_ip                          = optional(string),
+    enable_jumbo_frame                     = optional(bool),
+
+    transit_gws = optional(map(object({
+      name                        = string,
+      enable_jumbo_frame          = optional(bool),
+      enable_over_private_network = optional(bool),
+      enable_insane_mode          = optional(bool),
+      attached                    = optional(bool),
+      insane_mode_tunnel_number   = optional(number),
+      spoke_prepend_as_path       = optional(list(string)),
+      transit_prepend_as_path     = optional(list(string)),
+    }))),
+
+    bgp_peers = optional(map(object({
+      connection_name   = string,
+      bgp_remote_as_num = number,
+      remote_lan_ip     = string,
+    }))),
+  }))
 
   validation {
-    condition     = length(var.gw_name) <= 50
-    error_message = "Name is too long. Max length is 50 characters."
+    condition = alltrue([
+      for k, v in var.edge_gws : length(v.gw_name) <= 50
+    ])
+    error_message = "gw_name is too long. Max length is 50 characters."
   }
 
   validation {
-    condition     = can(regex("^[a-zA-Z0-9-_]*$", var.gw_name))
+    condition = alltrue([
+      for k, v in var.edge_gws : can(regex("^[a-zA-Z0-9-_]*$", v.gw_name))
+    ])
     error_message = "Only a-z, A-Z, 0-9 and hyphens and underscores are allowed."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(v.wan_interface_ip_prefix))
+    ])
+    error_message = "wan_interface_ip_prefix does not like a valid IP/NETMASK combination."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.wan_default_gateway_ip)))
+    ])
+    error_message = "wan_default_gateway_ip does not like a valid IP address."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(v.lan_interface_ip_prefix))
+    ])
+    error_message = "lan_interface_ip_prefix does not like a valid IP/NETMASK combination."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(v.management_egress_ip_prefix)) || v.management_egress_ip_prefix == null
+    ])
+    error_message = "management_egress_ip_prefix does not like a valid IP/NETMASK combination."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(v.management_interface_ip_prefix)) || v.management_interface_ip_prefix == null
+    ])
+    error_message = "management_interface_ip_prefix does not like a valid IP/NETMASK combination."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.management_default_gateway_ip))) || v.management_default_gateway_ip == null
+    ])
+    error_message = "management_default_gateway_ip does not like a valid IP address."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.dns_server_ip))) || v.dns_server_ip == null
+    ])
+    error_message = "dns_server_ip does not like a valid IP address."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.secondary_dns_server_ip))) || v.secondary_dns_server_ip == null
+    ])
+    error_message = "secondary_dns_server_ip does not like a valid IP address."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : v.bgp_polling_time != null ? v.bgp_polling_time >= 10 && v.bgp_polling_time <= 50 : true
+    ])
+    error_message = "bgp_polling_time invalid value. Must be in range 10-50."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : v.bgp_polling_time != null ? v.bgp_polling_time >= 12 && v.bgp_polling_time <= 360 : true
+    ])
+    error_message = "bgp_hold_time invalid value. Must be in range 12-360."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", v.latitude)) || v.latitude == null
+    ])
+    error_message = "This does not like a valid latitude."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", v.longitude)) || v.longitude == null
+    ])
+    error_message = "This does not like a valid longitude."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.wan_public_ip))) || v.wan_public_ip == null
+    ])
+    error_message = "wan_public_ip does not like a valid IP address."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.edge_gws : v.management_interface_config != null ? (contains(["dhcp", "static"], lower(v.management_interface_config))) : true
+    ])
+    error_message = "Invalid management_interface_config type. Choose DHCP or Static."
   }
 }
 
@@ -25,48 +172,6 @@ variable "site_id" {
   validation {
     condition     = can(regex("^[a-zA-Z0-9-_]*$", var.site_id))
     error_message = "Only a-z, A-Z, 0-9 and hyphens and underscores are allowed."
-  }
-}
-
-variable "management_interface_config" {
-  description = "Management interface configuration."
-  type        = string
-  default     = "DHCP"
-  nullable    = false
-
-  validation {
-    condition     = contains(["dhcp", "static"], lower(var.management_interface_config))
-    error_message = "Invalid management_interface_config type. Choose DHCP or Static."
-  }
-}
-
-variable "wan_interface_ip_prefix" {
-  description = "WAN interface IP and subnet prefix."
-  type        = string
-
-  validation {
-    condition     = can(cidrnetmask(var.wan_interface_ip_prefix))
-    error_message = "This does not like a valid CIDR."
-  }
-}
-
-variable "wan_default_gateway_ip" {
-  description = "WAN default gateway IP."
-  type        = string
-
-  validation {
-    condition     = can(cidrnetmask(format("%s/32", var.wan_default_gateway_ip)))
-    error_message = "This does not like a valid IP."
-  }
-}
-
-variable "lan_interface_ip_prefix" {
-  description = "LAN interface IP and subnet prefix."
-  type        = string
-
-  validation {
-    condition     = can(cidrnetmask(var.lan_interface_ip_prefix))
-    error_message = "This does not like a valid CIDR."
   }
 }
 
@@ -94,197 +199,6 @@ variable "ztp_file_download_path" {
   }
 }
 
-variable "management_egress_ip_prefix" {
-  description = "Management egress gateway IP and subnet prefix."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(var.management_egress_ip_prefix)) || var.management_egress_ip_prefix == null
-    error_message = "This does not like a valid CIDR."
-  }
-}
-
-variable "enable_management_over_private_network" {
-  description = "Switch to enable management over the private network."
-  type        = bool
-  default     = null
-}
-
-variable "enable_edge_active_standby" {
-  description = "Switch to enable Edge Active-Standby mode."
-  type        = bool
-  default     = null
-}
-
-variable "enable_edge_active_standby_preemptive" {
-  description = "Switch to enable Preemptive Mode for Edge Active-Standby."
-  type        = bool
-  default     = null
-}
-
-variable "management_interface_ip_prefix" {
-  description = "Management interface IP and subnet prefix."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(var.management_interface_ip_prefix)) || var.management_interface_ip_prefix == null
-    error_message = "This does not like a valid CIDR."
-  }
-}
-
-variable "management_default_gateway_ip" {
-  description = "Management default gateway IP."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(format("%s/32", var.management_default_gateway_ip))) || var.management_default_gateway_ip == null
-    error_message = "This does not like a valid IP."
-  }
-}
-
-variable "dns_server_ip" {
-  description = "DNS server IP."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(format("%s/32", var.dns_server_ip))) || var.dns_server_ip == null
-    error_message = "This does not like a valid IP."
-  }
-}
-
-variable "secondary_dns_server_ip" {
-  description = "Secondary DNS server IP."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(format("%s/32", var.secondary_dns_server_ip))) || var.secondary_dns_server_ip == null
-    error_message = "This does not like a valid IP."
-  }
-}
-
-variable "local_as_number" {
-  description = "Configures the Aviatrix Edge Gateway ASN number."
-  type        = number
-  default     = null
-}
-
-variable "prepend_as_path" {
-  description = "List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set."
-  type        = list(number)
-  default     = null
-}
-
-variable "enable_learned_cidrs_approval" {
-  description = "Switch to enable/disable CIDR approval for BGP Edge Gateway."
-  type        = bool
-  default     = false
-  nullable    = false
-}
-
-variable "approved_learned_cidrs" {
-  description = "A list of approved learned CIDRs."
-  type        = list(string)
-  default     = null
-}
-
-variable "spoke_bgp_manual_advertise_cidrs" {
-  description = "Intended CIDR list to be advertised to external BGP router."
-  type        = list(string)
-  default     = null
-}
-
-variable "enable_preserve_as_path" {
-  description = "Enable preserve as_path when advertising manual summary cidrs on BGP edge gateway."
-  type        = bool
-  default     = null
-}
-
-
-variable "bgp_polling_time" {
-  description = "BGP route polling time. Unit is in seconds."
-  type        = number
-  default     = null
-
-  validation {
-    condition     = var.bgp_polling_time != null ? (var.bgp_polling_time >= 10 && var.bgp_polling_time <= 50) : true
-    error_message = "Invalid value. Must be in range 10-50."
-  }
-}
-
-variable "bgp_hold_time" {
-  description = "BGP hold time. Unit is in seconds."
-  type        = number
-  default     = null
-
-  validation {
-    condition     = var.bgp_hold_time != null ? (var.bgp_hold_time >= 12 && var.bgp_hold_time <= 360) : true
-    error_message = "Invalid value. Must be in range 12-360."
-  }
-}
-
-variable "enable_edge_transitive_routing" {
-  description = "Switch to enable Edge transitive routing."
-  type        = bool
-  default     = null
-}
-
-variable "enable_jumbo_frame" {
-  description = "Switch to enable jumbo frame."
-  type        = bool
-  default     = null
-}
-
-variable "latitude" {
-  description = "Edge gateway latitude."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", var.latitude)) || var.latitude == null
-    error_message = "This does not like a valid latitude."
-  }
-}
-
-variable "longitude" {
-  description = "Edge gateway longitude."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", var.longitude)) || var.longitude == null
-    error_message = "This does not like a valid longitude."
-  }
-}
-
-variable "wan_public_ip" {
-  description = "WAN public IP. Required for attaching connections over the Internet."
-  type        = string
-  default     = null
-
-  validation {
-    condition     = can(cidrnetmask(format("%s/32", var.wan_public_ip))) || var.wan_public_ip == null
-    error_message = "This does not like a valid IP."
-  }
-}
-
-variable "bgp_peers" {
-  description = "MAP of BGP peers to set up for this edge gateway."
-  type        = map(any)
-  default     = {}
-}
-
-variable "transit_gw" {
-  description = "Name of the transit gateway to attach this edge to."
-  type        = string
-  default     = ""
-  nullable    = false
-}
-
 variable "network_domain" {
   description = "Provide network domain name to which edge needs to be deployed. Transit gateway must be attached and have segmentation enabled."
   type        = string
@@ -292,13 +206,51 @@ variable "network_domain" {
   nullable    = false
 }
 
-variable "attached" {
-  description = "Set to false if you don't want to attach spoke to transit_gw."
-  type        = bool
-  default     = false
-  nullable    = false
-}
-
 locals {
   ztp_file_download_path = var.ztp_file_download_path == "" ? path.root : var.ztp_file_download_path
+
+  #Forge map for network domain attachments
+  network_domain_attachments = merge([for k, v in var.edge_gws :
+    { for x, y in coalesce(v.transit_gws, {}) :
+      format("%s-%s", k, y.name) => {
+        transit = y.name
+        gw_name = v.gw_name
+      }
+      if coalesce(y.attached, false)
+    }
+    if length(var.network_domain) > 0
+  ]...)
+
+  #Forge map for transit attachments
+  transit_attachments = merge([for k, v in var.edge_gws :
+    { for x, y in coalesce(v.transit_gws, {}) :
+      format("%s-%s", k, y.name) => {
+        transit                     = y.name
+        gw_name                     = v.gw_name
+        enable_jumbo_frame          = y.enable_jumbo_frame
+        enable_over_private_network = y.enable_over_private_network
+        enable_insane_mode          = y.enable_insane_mode
+        insane_mode_tunnel_number   = y.insane_mode_tunnel_number
+        spoke_prepend_as_path       = y.spoke_prepend_as_path
+        transit_prepend_as_path     = y.transit_prepend_as_path
+      }
+      if coalesce(y.attached, false)
+    }
+  ]...)
+
+  #Forge map for bgp peers
+  bgp_peers = merge([for k, v in var.edge_gws :
+    { for x, y in coalesce(v.bgp_peers, {}) :
+      format("%s-%s", k, y.connection_name) => {
+        gw_name           = v.gw_name
+        connection_name   = y.connection_name,
+        bgp_remote_as_num = y.bgp_remote_as_num,
+        remote_lan_ip     = y.remote_lan_ip,
+      }
+    }
+  ]...)
+}
+
+output "network" {
+  value = local.bgp_peers
 }
