@@ -12,6 +12,7 @@ Module version | Terraform version | Controller version | Terraform provider ver
 v1.0.0 | >= 1.2.0 | 6.8 | ~> 2.23.0
 
 ### Usage Example
+See [examples](https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-edge/tree/main/examples)
 ```hcl
 module "branch1" {
   source  = "terraform-aviatrix-modules/mc-edge/aviatrix"
@@ -58,9 +59,6 @@ module "branch1" {
 }
 ```
 On first apply, the ISO/Cloud-init gets created for deployiong the actual gateway. Once gateway deployment is complete, add `attached = true` to each gw entry to create the attachment to the transit gateway, any network segmentation domain as well as set up any desired BGP peers.
-
-### Usage Examples
-See [examples](https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-edge/tree/main/examples)
 
 ### Module variables
 The following variables are required:
