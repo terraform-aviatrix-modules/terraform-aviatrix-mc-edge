@@ -12,29 +12,29 @@ resource "aviatrix_edge_spoke" "default" {
   ztp_file_download_path      = local.ztp_file_download_path
 
   #Optional
-  management_egress_ip_prefix            = try(each.value.management_egress_ip_prefix, null)
-  enable_management_over_private_network = try(each.value.enable_management_over_private_network, null)
-  enable_edge_active_standby             = try(each.value.enable_edge_active_standby, null)
-  enable_edge_active_standby_preemptive  = try(each.value.enable_edge_active_standby_preemptive, null)
-  management_interface_ip_prefix         = try(each.value.management_interface_ip_prefinull, null)
-  management_default_gateway_ip          = try(each.value.management_default_gateway_ip, null)
-  dns_server_ip                          = try(each.value.dns_server_ip, null)
-  secondary_dns_server_ip                = try(each.value.secondary_dns_server_ip, null)
+  management_egress_ip_prefix            = each.value.management_egress_ip_prefix
+  enable_management_over_private_network = each.value.enable_management_over_private_network
+  enable_edge_active_standby             = each.value.enable_edge_active_standby
+  enable_edge_active_standby_preemptive  = each.value.enable_edge_active_standby_preemptive
+  management_interface_ip_prefix         = each.value.management_interface_ip_prefix
+  management_default_gateway_ip          = each.value.management_default_gateway_ip
+  dns_server_ip                          = each.value.dns_server_ip
+  secondary_dns_server_ip                = each.value.secondary_dns_server_ip
 
   #Advanced options
-  local_as_number                  = try(each.value.local_as_number, null)
-  prepend_as_path                  = try(each.value.prepend_as_path, null)
-  enable_learned_cidrs_approval    = try(each.value.enable_learned_cidrs_approval, null)
-  approved_learned_cidrs           = try(each.value.approved_learned_cidrs, null)
-  spoke_bgp_manual_advertise_cidrs = try(each.value.spoke_bgp_manual_advertise_cidrs, null)
-  enable_preserve_as_path          = try(each.value.enable_preserve_as_path, null)
-  bgp_polling_time                 = try(each.value.bgp_polling_time, null)
-  bgp_hold_time                    = try(each.value.bgp_hold_time, null)
-  enable_edge_transitive_routing   = try(each.value.enable_edge_transitive_routing, null)
-  enable_jumbo_frame               = try(each.value.enable_jumbo_frame, null)
-  latitude                         = try(each.value.latitude, null)
-  longitude                        = try(each.value.longitude, null)
-  wan_public_ip                    = try(each.value.wan_public_ip, null)
+  local_as_number                  = each.value.local_as_number
+  prepend_as_path                  = each.value.prepend_as_path
+  enable_learned_cidrs_approval    = each.value.enable_learned_cidrs_approval
+  approved_learned_cidrs           = each.value.approved_learned_cidrs
+  spoke_bgp_manual_advertise_cidrs = each.value.spoke_bgp_manual_advertise_cidrs
+  enable_preserve_as_path          = each.value.enable_preserve_as_path
+  bgp_polling_time                 = each.value.bgp_polling_time
+  bgp_hold_time                    = each.value.bgp_hold_time
+  enable_edge_transitive_routing   = each.value.enable_edge_transitive_routing
+  enable_jumbo_frame               = each.value.enable_jumbo_frame
+  latitude                         = each.value.latitude
+  longitude                        = each.value.longitude
+  wan_public_ip                    = each.value.wan_public_ip
 }
 
 resource "aviatrix_segmentation_network_domain_association" "default" {
