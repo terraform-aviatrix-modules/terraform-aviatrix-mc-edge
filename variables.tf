@@ -250,7 +250,3 @@ locals {
     }
   ]...)
 }
-
-output "network" {
-  value = local.bgp_peers
-}
