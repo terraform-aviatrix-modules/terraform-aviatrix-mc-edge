@@ -12,7 +12,7 @@ module "branch1" {
   edge_gws = {
 
     #Edge Gateway 1
-    "gw1" = {
+    gw1 = {
       gw_name                 = "gw1",
       lan_interface_ip_prefix = "10.50.10.10/24",
       wan_default_gateway_ip  = "1.1.1.1"
@@ -21,11 +21,11 @@ module "branch1" {
 
       #Settings for transit gateway attachment for Edge Gateway 1
       transit_gws = {
-        "transit1" = {
+        transit1 = {
           name = "transit1",
           #attached = true
         },
-        "transit2" = {
+        transit2 = {
           name = "transit2",
           #attached = true
         },
@@ -47,7 +47,7 @@ module "branch1" {
     }
 
     #Edge Gateway 2
-    "gw2" = {
+    gw2 = {
       gw_name                 = "gw2",
       lan_interface_ip_prefix = "10.50.10.11/24",
       wan_default_gateway_ip  = "1.1.1.1"
@@ -56,11 +56,11 @@ module "branch1" {
 
       #Settings for transit gateway attachment for Edge Gateway 1
       transit_gws = {
-        "transit1" = {
+        transit1 = {
           name = "transit1",
           #attached = true
         },
-        "transit2" = {
+        transit2 = {
           name = "transit2",
           #attached = true
         },

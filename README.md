@@ -22,32 +22,32 @@ module "branch1" {
   network_domain = "test"
 
   edge_gws = {
-    "gw1" = {
+    gw1 = {
       gw_name                 = "gw1",
       lan_interface_ip_prefix = "10.50.10.10/24",
       transit_gws = {
-        "transit1" = {
+        transit1 = {
           name               = "transit1",
           attached           = true
           enable_jumbo_frame = true,
         },
-        "transit2" = {
+        transit2 = {
           name = "transit2",
         },
       }
       wan_default_gateway_ip  = "1.1.1.1"
       wan_interface_ip_prefix = "1.1.1.10/24"
     }
-    "gw2" = {
+    gw2 = {
       gw_name                 = "gw2",
       lan_interface_ip_prefix = "10.50.10.11/24",
       transit_gws = {
-        "transit1" = {
+        transit1 = {
           name               = "transit1",
           attached           = true
           enable_jumbo_frame = true,
         },
-        "transit2" = {
+        transit2 = {
           name     = "transit2",
           attached = true
         },
