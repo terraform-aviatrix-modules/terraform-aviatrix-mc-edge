@@ -87,6 +87,11 @@ resource "aviatrix_edge_spoke_external_device_conn" "default" {
 
   lifecycle {
     precondition {
+      condition     = can(signum(aviatrix_edge_spoke.default[each.value.gw_name].local_as_number))
+      error_message = format("The edge gateway %s does not have a local as number configured. This is required for BGP peering.", each.value.gw_name)
+    }
+
+    precondition {
       condition     = aviatrix_edge_spoke.default[each.value.gw_name].state == "up"
       error_message = format("The edge gateway %s is not yet up. You can prevent this error by removing the BGP peerings until the gateway is up.", each.value.gw_name)
     }
