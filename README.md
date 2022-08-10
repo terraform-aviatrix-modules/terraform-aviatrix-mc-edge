@@ -3,7 +3,6 @@
 ### Description
 Deploys one or multiple Aviatrix edge gateways to a site and attaches it to the desired transit gateway(s) and network domain for segmentation.
 
-
 <span style="color:red"><b>Warning:</b></span> This module leverages a Terraform [experimental feature](https://www.terraform.io/language/functions/defaults). Read the details of this feature and decide whether it is appropriate for you to adopt this module as-is, while using this feature. As this experiment will graduate to stable in [Terraform 1.3.0](https://github.com/hashicorp/terraform/releases/tag/v1.3.0-alpha20220706) this module will be adjusted and >=1.3.0 compatible only in the near future.
 
 ### Compatibility
