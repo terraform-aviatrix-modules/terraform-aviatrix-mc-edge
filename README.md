@@ -88,6 +88,8 @@ bgp_remote_as_num | AS Number of the remote gateway to peer with.
 remote_lan_ip | IP Address of the remote gateway to peer with.
 
 ### Optional module variables
+key | default | value
+:--- | :--- | :---
 transit_gws | | A list of names of the transit gateways to attach this edge to.
 ztp_file_download_path | execution folder | The folder path where the ZTP file will be downloaded.
 network_domain | | Provide network domain name to which the edges needs to be deployed. Transit gateways must have segmentation enabled.
