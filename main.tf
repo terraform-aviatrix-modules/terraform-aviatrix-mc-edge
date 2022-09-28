@@ -42,7 +42,7 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 
   transit_gateway_name = each.value.transit
   network_domain_name  = var.network_domain
-  attachment_name      = aviatrix_edge_spoke.default[each.value.gw_name].gw_name
+  attachment_name      = aviatrix_edge_spoke.default[each.value.gw_name].id
 
   lifecycle {
     precondition {
@@ -55,7 +55,7 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 resource "aviatrix_edge_spoke_transit_attachment" "default" {
   for_each = local.transit_attachments
 
-  spoke_gw_name               = aviatrix_edge_spoke.default[each.value.gw_name].gw_name
+  spoke_gw_name               = aviatrix_edge_spoke.default[each.value.gw_name].id
   transit_gw_name             = each.value.transit
   enable_jumbo_frame          = each.value.enable_jumbo_frame
   enable_over_private_network = each.value.enable_over_private_network
@@ -76,7 +76,7 @@ resource "aviatrix_edge_spoke_external_device_conn" "default" {
   for_each = local.bgp_peers
 
   site_id           = var.site_id
-  gw_name           = aviatrix_edge_spoke.default[each.value.gw_name].gw_name
+  gw_name           = aviatrix_edge_spoke.default[each.value.gw_name].id
   connection_name   = each.value.connection_name
   bgp_local_as_num  = aviatrix_edge_spoke.default[each.value.gw_name].local_as_number
   bgp_remote_as_num = each.value.bgp_remote_as_num
