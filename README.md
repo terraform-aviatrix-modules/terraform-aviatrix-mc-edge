@@ -8,14 +8,14 @@ Deploys one or multiple Aviatrix edge gateways to a site and attaches it to the 
 ### Compatibility
 Module version | Terraform version | Controller version | Terraform provider version
 :--- | :--- | :--- | :---
-v1.0.0 | >= 1.2.0 | 6.8 | ~> 2.23.0
+v1.0.1 | >= 1.2.0 | 6.8 | ~> 2.23.0
 
 ### Usage Example
 See [examples](https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-edge/tree/main/examples)
 ```hcl
 module "branch1" {
   source  = "terraform-aviatrix-modules/mc-edge/aviatrix"
-  version = "1.0.0"
+  version = "v1.0.1"
 
   site_id        = "home"
   network_domain = "test"
