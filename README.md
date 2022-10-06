@@ -8,7 +8,7 @@ Deploys one or multiple Aviatrix edge gateways to a site and attaches it to the 
 ### Compatibility
 Module version | Terraform version | Controller version | Terraform provider version
 :--- | :--- | :--- | :---
-v1.0.1 | >= 1.2.0 | 6.8 | ~> 2.23.0
+v1.1.0 | >= 1.2.0 | 6.9 | ~> 2.24.0
 
 ### Usage Example
 See [examples](https://github.com/terraform-aviatrix-modules/terraform-aviatrix-mc-edge/tree/main/examples)
