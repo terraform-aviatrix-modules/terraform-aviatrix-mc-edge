@@ -133,14 +133,14 @@ variable "edge_gws" {
 
   validation {
     condition = alltrue([
-      for k, v in var.edge_gws : can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", v.latitude)) || v.latitude == null
+      for k, v in var.edge_gws : can(regex("^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$", v.latitude)) || v.latitude == null
     ])
     error_message = "This does not like a valid latitude."
   }
 
   validation {
     condition = alltrue([
-      for k, v in var.edge_gws : can(regex("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", v.longitude)) || v.longitude == null
+      for k, v in var.edge_gws : can(regex("^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$", v.longitude)) || v.longitude == null
     ])
     error_message = "This does not like a valid longitude."
   }
