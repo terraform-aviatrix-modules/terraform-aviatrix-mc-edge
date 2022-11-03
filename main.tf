@@ -46,7 +46,7 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 
   lifecycle {
     precondition {
-      condition     = aviatrix_edge_spoke.default[each.value.gw_name].state == "up"
+      condition     = aviatrix_edge_spoke.default[each.value.edge_gw_instance].state == "up"
       error_message = format("The edge gateway %s is not yet up. You can prevent this error by leaving it detached (do not set attached = true on each gateway) until the gateway is up.", each.value.gw_name)
     }
   }
@@ -66,7 +66,7 @@ resource "aviatrix_edge_spoke_transit_attachment" "default" {
 
   lifecycle {
     precondition {
-      condition     = aviatrix_edge_spoke.default[each.value.gw_name].state == "up"
+      condition     = aviatrix_edge_spoke.default[each.value.edge_gw_instance].state == "up"
       error_message = format("The edge gateway %s is not yet up. You can prevent this error by leaving it detached (do not set attached = true on each gateway) until the gateway is up.", each.value.gw_name)
     }
   }
@@ -87,12 +87,12 @@ resource "aviatrix_edge_spoke_external_device_conn" "default" {
 
   lifecycle {
     precondition {
-      condition     = can(signum(aviatrix_edge_spoke.default[each.value.gw_name].local_as_number))
+      condition     = can(signum(aviatrix_edge_spoke.default[each.value.edge_gw_instance].local_as_number))
       error_message = format("The edge gateway %s does not have a local as number configured. This is required for BGP peering.", each.value.gw_name)
     }
 
     precondition {
-      condition     = aviatrix_edge_spoke.default[each.value.gw_name].state == "up"
+      condition     = aviatrix_edge_spoke.default[each.value.edge_gw_instance].state == "up"
       error_message = format("The edge gateway %s is not yet up. You can prevent this error by removing the BGP peerings until the gateway is up.", each.value.gw_name)
     }
   }

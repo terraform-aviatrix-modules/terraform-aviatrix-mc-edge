@@ -213,8 +213,9 @@ locals {
   network_domain_attachments = merge([for k, v in var.edge_gws :
     { for x, y in coalesce(v.transit_gws, {}) :
       format("%s-%s", k, y.name) => {
-        transit = y.name
-        gw_name = v.gw_name
+        edge_gw_instance = k
+        transit          = y.name
+        gw_name          = v.gw_name
       }
       if coalesce(y.attached, false)
     }
@@ -225,6 +226,7 @@ locals {
   transit_attachments = merge([for k, v in var.edge_gws :
     { for x, y in coalesce(v.transit_gws, {}) :
       format("%s-%s", k, y.name) => {
+        edge_gw_instance            = k
         transit                     = y.name
         gw_name                     = v.gw_name
         enable_jumbo_frame          = y.enable_jumbo_frame
@@ -242,6 +244,7 @@ locals {
   bgp_peers = merge([for k, v in var.edge_gws :
     { for x, y in coalesce(v.bgp_peers, {}) :
       format("%s-%s", k, y.connection_name) => {
+        edge_gw_instance  = k
         gw_name           = v.gw_name
         connection_name   = y.connection_name,
         bgp_remote_as_num = y.bgp_remote_as_num,
