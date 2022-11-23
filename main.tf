@@ -42,7 +42,7 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 
   transit_gateway_name = each.value.transit
   network_domain_name  = var.network_domain
-  attachment_name      = aviatrix_edge_spoke.default[each.value.gw_name].id
+  attachment_name      = aviatrix_edge_spoke.default[each.value.edge_gw_instance].id
 
   lifecycle {
     precondition {
@@ -55,7 +55,7 @@ resource "aviatrix_segmentation_network_domain_association" "default" {
 resource "aviatrix_edge_spoke_transit_attachment" "default" {
   for_each = local.transit_attachments
 
-  spoke_gw_name               = aviatrix_edge_spoke.default[each.value.gw_name].id
+  spoke_gw_name               = aviatrix_edge_spoke.default[each.value.edge_gw_instance].id
   transit_gw_name             = each.value.transit
   enable_jumbo_frame          = each.value.enable_jumbo_frame
   enable_over_private_network = each.value.enable_over_private_network
@@ -76,11 +76,11 @@ resource "aviatrix_edge_spoke_external_device_conn" "default" {
   for_each = local.bgp_peers
 
   site_id           = var.site_id
-  gw_name           = aviatrix_edge_spoke.default[each.value.gw_name].id
+  gw_name           = aviatrix_edge_spoke.default[each.value.edge_gw_instance].id
   connection_name   = each.value.connection_name
-  bgp_local_as_num  = aviatrix_edge_spoke.default[each.value.gw_name].local_as_number
+  bgp_local_as_num  = aviatrix_edge_spoke.default[each.value.edge_gw_instance].local_as_number
   bgp_remote_as_num = each.value.bgp_remote_as_num
-  local_lan_ip      = split("/", aviatrix_edge_spoke.default[each.value.gw_name].lan_interface_ip_prefix)[0]
+  local_lan_ip      = split("/", aviatrix_edge_spoke.default[each.value.edge_gw_instance].lan_interface_ip_prefix)[0]
   remote_lan_ip     = each.value.remote_lan_ip
   connection_type   = "bgp" #Only supported value
   tunnel_protocol   = "LAN" #Only supported value

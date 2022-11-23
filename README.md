@@ -78,7 +78,7 @@ key | value
 name | Name of the transit gateway to attach to.
 attached | Whether the edge gateway should be attached to this transit.
 
-### Mandatory BGP peering map attributes (bgp_peerings)
+### Mandatory BGP peering map attributes (bgp_peers)
 key | value
 :--- | :---
 connection_name | Name for the BGP peering.
@@ -126,7 +126,7 @@ key | default | value
 attached | false | Set to true to attach it to the transit gateway after provisioning.
 enable_jumbo_frame | false | Switch to enable jumbo frame on attachment.
 enable_insane_mode | false | Switch to enable insane mode.
-enable_over_private_network | true | Switch to enable over the private network. 
+enable_over_private_network | true | Set to false to use public network.
 insane_mode_tunnel_number | | Insane mode tunnel number.
 spoke_prepend_as_path | | Connection based AS Path Prepend. Can only use the gateway's own local AS number, repeated up to 25 times. Applies on the Edge as a Spoke.
 transit_prepend_as_path | | Connection based AS Path Prepend. Can only use the gateway's own local AS number, repeated up to 25 times. Applies on the Transit Gateway.
