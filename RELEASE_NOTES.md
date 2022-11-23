@@ -1,5 +1,10 @@
 # terraform-aviatrix-mc-edge - release notes
 
+## v1.1.2
+
+### Reference edge gateway by instance name
+Fix an issue where if the gateway instance name in Terraform did not match the actual gateway name, the module threw `Invalid index` error.
+
 ## v1.1.1
 
 ### Graduate Terraform experimental [optional](https://www.terraform.io/language/expressions/type-constraints#optional-object-type-attributes) feature to GA 1.3.0 version.

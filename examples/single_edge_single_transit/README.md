@@ -4,7 +4,7 @@ This will create a single edge gateway and attach it to a single transit.
 ```hcl
 module "branch1" {
   source  = "terraform-aviatrix-modules/mc-edge/aviatrix"
-  version = "1.1.1"
+  version = "1.1.2"
 
   site_id = "branch1"
 
