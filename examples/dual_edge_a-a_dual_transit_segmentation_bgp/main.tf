@@ -1,6 +1,6 @@
 module "branch1" {
   source  = "terraform-aviatrix-modules/mc-edge/aviatrix"
-  version = "1.1.2"
+  version = "1.2.0"
 
   site_id        = "branch1"
   network_domain = "branches"
