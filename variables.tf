@@ -126,7 +126,7 @@ variable "edge_gws" {
 
   validation {
     condition = alltrue([
-      for k, v in var.edge_gws : v.bgp_polling_time != null ? v.bgp_polling_time >= 12 && v.bgp_polling_time <= 360 : true
+      for k, v in var.edge_gws : v.bgp_hold_time != null ? v.bgp_hold_time >= 12 && v.bgp_hold_time <= 360 : true
     ])
     error_message = "bgp_hold_time invalid value. Must be in range 12-360."
   }
