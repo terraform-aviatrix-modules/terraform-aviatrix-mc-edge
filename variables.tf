@@ -6,9 +6,9 @@ variable "edge_gws" {
     lan_interface_ip_prefix = string,
 
     wan_default_gateway_ip                 = string,
-    management_interface_config            = optional(string),
+    management_enable_dhcp                 = optional(bool),
     management_default_gateway_ip          = optional(string),
-    management_egress_ip_prefix            = optional(string),
+    management_egress_ip_prefix_list       = optional(set(string), []),
     enable_management_over_private_network = optional(bool),
     enable_edge_active_standby             = optional(bool),
     enable_edge_active_standby_preemptive  = optional(bool),
@@ -84,9 +84,11 @@ variable "edge_gws" {
 
   validation {
     condition = alltrue([
-      for k, v in var.edge_gws : can(cidrnetmask(v.management_egress_ip_prefix)) || v.management_egress_ip_prefix == null
+      for k, v in var.edge_gws : alltrue(
+        [for cidr in v.management_egress_ip_prefix_list : can(cidrnetmask(cidr))]
+      ) || v.management_egress_ip_prefix_list == null
     ])
-    error_message = "management_egress_ip_prefix does not like a valid IP/NETMASK combination."
+    error_message = "management_egress_ip_prefix_list does not like a set with valid IP/NETMASK combinations."
   }
 
   validation {
@@ -150,13 +152,6 @@ variable "edge_gws" {
       for k, v in var.edge_gws : can(cidrnetmask(format("%s/32", v.wan_public_ip))) || v.wan_public_ip == null
     ])
     error_message = "wan_public_ip does not like a valid IP address."
-  }
-
-  validation {
-    condition = alltrue([
-      for k, v in var.edge_gws : v.management_interface_config != null ? (contains(["dhcp", "static"], lower(v.management_interface_config))) : true
-    ])
-    error_message = "Invalid management_interface_config type. Choose DHCP or Static."
   }
 }
 

@@ -1,5 +1,9 @@
 # terraform-aviatrix-mc-edge - release notes
 
+## v1.3.0
+
+### Controller version 7.1 / Terraform provider 3.1.x compatibility
+
 ## v1.2.0
 
 ### Controller version 7.0 / Terraform provider 3.0.x compatibility

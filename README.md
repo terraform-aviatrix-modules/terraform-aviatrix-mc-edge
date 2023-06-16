@@ -112,8 +112,8 @@ latitude | | Edge gateway latitude.
 local_as_number | | Configures the Aviatrix Edge Gateway ASN number.
 longitude | | Edge gateway longitude.
 management_default_gateway_ip | | Management default gateway IP.
-management_egress_ip_prefix | | Management egress gateway IP and subnet prefix.
-management_interface_config | "DHCP" | Management interface configuration.
+management_egress_ip_prefix_list | | Management egress gateway IP and subnet prefix.
+management_enable_dhcp | false | Enable DHCP on the management interface.
 management_interface_ip_prefix | | Management interface IP and subnet prefix.
 prepend_as_path | | List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set.
 secondary_dns_server_ip | | Secondary DNS server IP.
