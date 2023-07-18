@@ -96,7 +96,7 @@ resource "aviatrix_edge_spoke_external_device_conn" "default" {
   connection_name   = each.value.connection_name
   bgp_local_as_num  = aviatrix_edge_spoke.default[each.value.edge_gw_instance].local_as_number
   bgp_remote_as_num = each.value.bgp_remote_as_num
-  local_lan_ip      = split("/", aviatrix_edge_spoke.default[each.value.edge_gw_instance].lan_interface_ip_prefix)[0]
+  local_lan_ip      = split("/", each.value.lan_prefix)
   remote_lan_ip     = each.value.remote_lan_ip
   connection_type   = "bgp" #Only supported value
   tunnel_protocol   = "LAN" #Only supported value

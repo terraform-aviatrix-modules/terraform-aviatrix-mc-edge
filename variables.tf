@@ -224,6 +224,7 @@ locals {
         edge_gw_instance            = k
         transit                     = y.name
         gw_name                     = v.gw_name
+        lan_prefix                  = v.lan_interface_ip_prefix
         enable_jumbo_frame          = y.enable_jumbo_frame
         enable_over_private_network = y.enable_over_private_network
         enable_insane_mode          = y.enable_insane_mode
