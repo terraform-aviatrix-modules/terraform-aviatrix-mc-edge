@@ -79,6 +79,7 @@ resource "aviatrix_edge_spoke_transit_attachment" "default" {
   insane_mode_tunnel_number   = each.value.insane_mode_tunnel_number
   spoke_prepend_as_path       = each.value.spoke_prepend_as_path
   transit_prepend_as_path     = each.value.transit_prepend_as_path
+  edge_wan_interfaces         = "eth0" #Hardcoded patch for issue with provider.
 
   lifecycle {
     precondition {
